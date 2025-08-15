@@ -117,20 +117,18 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Container(
             width: double.infinity,
-            color: Colors.orangeAccent,
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Center(
-              child:
-                  loadingStreak
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                        '🔥 Exercise Streak: $streakCount day${streakCount == 1 ? '' : 's'}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+              child: loadingStreak
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : Text(
+                      '🔥 Exercise Streak: $streakCount day${streakCount == 1 ? '' : 's'}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
+                    ),
             ),
           ),
           Expanded(
@@ -152,11 +150,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.all(16),
                       margin: const EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(
-                        color: Colors.blueAccent,
+                        color: const Color.fromARGB(255, 57, 58, 59),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
-                        "Add / Choose Exercises",
+                        "Add Exercises",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -185,12 +183,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   Expanded(
                     child: StreamBuilder<QuerySnapshot>(
-                      stream:
-                          FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(userId)
-                              .collection('exercises')
-                              .snapshots(),
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(userId)
+                          .collection('exercises')
+                          .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return const Center(
@@ -200,28 +197,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
                         var docs = snapshot.data!.docs;
                         return ListView(
-                          children:
-                              docs.map((doc) {
-                                String name;
-                                try {
-                                  name = doc['name'];
-                                } catch (e) {
-                                  name =
-                                      doc.id; // fallback if "name" field is missing
-                                }
-                                bool isChecked =
-                                    checkedExercises[name] ?? false;
-                                return CheckboxListTile(
-                                  title: Text(name),
-                                  value: isChecked,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      checkedExercises[name] = value ?? false;
-                                    });
-                                    saveCheckboxState(name, value ?? false);
-                                  },
-                                );
-                              }).toList(),
+                          children: docs.map((doc) {
+                            String name;
+                            try {
+                              name = doc['name'];
+                            } catch (e) {
+                              name =
+                                  doc.id; // fallback if "name" field is missing
+                            }
+                            bool isChecked = checkedExercises[name] ?? false;
+                            return CheckboxListTile(
+                              title: Text(name),
+                              value: isChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  checkedExercises[name] = value ?? false;
+                                });
+                                saveCheckboxState(name, value ?? false);
+                              },
+                            );
+                          }).toList(),
                         );
                       },
                     ),
